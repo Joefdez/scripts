@@ -21,6 +21,7 @@ beta = betaFactor(m1, m2)
 
 # master proc load and share data with other procs
 if rank == 0:
+    print "Proc 0 reading data file"
     dataT = loadtxt("/home/joe/Documents/PhD_datafiles/UD_10rt_Dea.dat")     # Change data.dat for an adequate directory
     dataT = dataT[dataT[:,2]>0]
     nE = shape(dataT)[0]            # Number of binary encounters
@@ -30,19 +31,19 @@ else:
 nE = comm.bcast(nE, root=0)
 
 comm.Barrier()
-
-if nE%nprocs == 0:
+modN = nE%nprocs
+if modN == 0:
     #print "case 1"
     nEP = nE/nprocs
     #print rank, nEP
     #print "rank" + str(rank) + str(nE) + str(nEP)
 
 else:
-    if rank != nprocs-1:
+    if rank < modN:
         nEP = nE/nprocs + 1
         #print "rank" + str(rank) + str(nE) + str(nEP)
     else:
-        nEP = nE%nprocs
+        nEP = nE/nprocs
 dataP = zeros([nEP,4])              # Prepare empty arrays to recieve data
 #print rank, nEP, shape(dataP)
 
@@ -51,7 +52,7 @@ if rank == 0:
     if nE%nprocs != 0:
         dataP = dataT[rank*(nE/nprocs + 1):(rank+1)*(nE/nprocs + 1),:]
         for ii in range(1, nprocs-1):
-            if ii < nE%nprocs:
+            if ii < modN:
             #print dataT[rank*(nE/nprocs + 1):(rank+1)*(nE/nprocs + 1),:]
             #print shape(dataT[(rank+1)*(nE/nprocs + 1):(rank+2)*(nE/nprocs + 1),:])
                 comm.Send([dataT[(ii)*(nE/nprocs + 1):(ii+1)*(nE/nprocs + 1),:
@@ -60,7 +61,7 @@ if rank == 0:
                 comm.Send([dataT[(ii*(nE/nprocs)+nE%nprocs):((ii+1)*(nE/nprocs)+nE%nprocs),:
                                                                 ], MPI.DOUBLE], dest=ii, tag=(77+ii))
 
-            comm.Send([dataT[(nE-nE%nprocs):,:], MPI.DOUBLE], dest=(nprocs-1), tag=(77+nprocs-1))
+            comm.Send([dataT[(nprocs-1)*(nE/nprocs) + modN:,:], MPI.DOUBLE], dest=(nprocs-1), tag=(77+nprocs-1))
     else:
         dataP = dataT[:nEP,:]
         for ii in range(1, nprocs-1):
@@ -72,7 +73,7 @@ else:
     comm.Recv([dataP, MPI.DOUBLE], source=0, tag=(rank+77))
     print "Proc " + str(rank) + " recieved data."
 #print rank, nEP, dataP[1:10,1]
-comm.Barrier()
+#comm.Barrier()
 #if rank == 0: del dataT
 # Generate binary distribution at Apoastron
 
@@ -96,6 +97,7 @@ for ii in range(nS):
     Rp   = dataP[:,0]*Rt                         # Periastron distance: closest approach
     Ls   = Rp/Mmbh                               # Problem length scale
     Ts   = sqrt(Rp**3./(GG*Mmbh))                 # Problem time scale
+    print rank, shape(Ts)
 #    aa0s = (aa0s**4. - 4*beta*orbT/2.)**(1./4.)  # Hardening ue to GW radiation on transit from apoastron to periastron
     aa   = aa0s*dataP[:,2]                        # Post-encounter separation. Evaluated at 10Rt
 
