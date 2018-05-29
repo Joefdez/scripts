@@ -3,8 +3,8 @@ from constants import *
 
 def cc0Factor(aa0, ee0):
     # Integration constant for Peter's equations
-    c1  = aa0*(1.-ee0**2.)
-    c2 = 1. + (121./304.)*ee0**2.
+    c1  = aa0*(1.-ee0**2.)*ee0**(-12./19.)
+    c2 = 1. + (121./304.)*(ee0**2.)
 
     return c1*(c2**(-870./2299.))
 
@@ -15,7 +15,7 @@ def betaFactor(m1, m2):
 
     return
 
-def mergeTimeInt(ee):
+def mergerTimeInt(ee):
     # Integral of merger time formula of a compact binary object due to GW radiation according to Peters equations:
     # "Gravitational Radiation and the Motion of Two Point Masses", Phys. Rev. 136 4b, 1964
     # ee: eccentricity
@@ -39,7 +39,7 @@ def mergerTimeecc(aa0s, ee0s, beta):
 
     ints = quadArray(mergerTimeInt, zeros(numS), ee0s)
 
-    return prefactor * ints
+    return prefactor*ints
 
 def mergerTimecirc(aa0s, beta):
     # Merger time of a circular binary ue to GW radiation according to Peters equations:
