@@ -1,5 +1,6 @@
 from physics import *
 from matplotlib.pylab import *
+from matplotlib.colors import *
 ion()
 
 data = loadtxt("../three_body_parabolic/outputNN/surv_Eud_Dud.dat")
@@ -74,7 +75,7 @@ ae1.set_xlabel(r"$1-e$", fontsize=24)
 ae1.set_ylabel(r"$p(1-e)$", fontsize=24)
 ae2.set_xlabel(r"$1-e$", fontsize=24)
 ae2.set_ylabel(r"Cumulative fraction $[\%]$", family='sans-serif', fontsize=24)
-
+ae1.set_xlim([0.005,1])
 
 
 # Calculate semi-major axis distribution
@@ -96,19 +97,20 @@ aa1.set_xlabel(r"$a/a_{0}$", fontsize=24)
 aa1.set_ylabel(r"$p(a/a_{0})$", fontsize=24)
 aa2.set_xlabel(r"$a/a_{0}$", fontsize=24)
 aa2.set_ylabel(r"Cumulative fraction $[\%]$", fontsize=24)
-aa1.set_xlim([10**(-1.5).,10**(1.5)])
-aa1.set_ylim([0.,36.5])
-aa2.set_yim([0.005,100.])
+aa1.set_xlim([10**(-1.5) ,10**(1.5)])
+aa1.set_ylim([0.,1.53])
+aa2.set_ylim([0.01,100.])
 
 
 # Calculate merger time ratio distribution
 mt = finalMT/initMT
-binse = logspace(log10(mt.min()), log10(mt.max()), num=100, endpoint=True, base=10.0)
-vals, bins = histogram(mt, bins=binse, density=True)
-points = 0.5*(bins[:-1]+ bins[1:])
-cumDist = cumsum(vals*diff(bins))*100
+#binse = logspace(log10(mt.min()), log10(mt.max()), num=100, endpoint=True, base=10.0)
+#vals, bins = histogram(mt, bins=binse, density=True)
+#points = 0.5*(bins[:-1]+ bins[1:])
+#cumDist = cumsum(vals*diff(bins))*100
 vals, bins = histogram(log10(mt), bins=100, density=True)
 points2 = 0.5*(bins[:-1]+ bins[1:])
+cumDist = cumsum(vals*diff(bins))*100
 # Plot merger time ratio distribution
 #at[0].step(points2, vals, linewidth=2)
 #at[1].loglog(points, cumDist, linewidth=2)
@@ -117,12 +119,14 @@ points2 = 0.5*(bins[:-1]+ bins[1:])
 #at[1].set_xlabel(r"$\tau_{GW, out}/\tau_{GW, in}$", fontsize=24)
 #at[1].set_ylabel(r"Cumulative fraction $[\%]$", fontsize=24)
 at1.step(points2, vals, linewidth=2)
-at2.loglog(points, cumDist, linewidth=2, color='red')
+at2.semilogy(points2, cumDist, linewidth=2, color='red')
 at1.set_xlabel(r"$\log_{10}(\tau_{GW, out}/\tau_{GW, in})$", fontsize=24)
 at1.set_ylabel(r"$p(\tau_{GW, out}/\tau_{GW, in})$", fontsize=24)
 at2.set_xlabel(r"$\tau_{GW, out}/\tau_{GW, in}$", fontsize=24)
 at2.set_ylabel(r"Cumulative fraction $[\%]$", fontsize=24)
-
+at1.set_xlim([-8.,8.])
+at1.set_ylim([0.,0.64])
+at2.set_ylim([0.,100.])
 
 
 # Initial and final merger time distributions
@@ -159,19 +163,19 @@ aee[0].set_xlabel(r"$e-e_{0}$", fontsize=24)
 aee[0].set_ylabel(r"$p(e-e_{0})$", fontsize=24)
 
 # Ratio of initial and final eccentricities
-vals, bins = histogram((data[:,9]/data[:,8]), bins=100, density=True)
+re = data[:,9]/data[:,8]
+binse = logspace(log10(re.min()), log10(re.max()), num=100, endpoint=True, base=10.0)
+vals, bins = histogram(re, bins=binse, density=True)
+#vals, bins = histogram(log10(data[:,9]/data[:,8]), bins=100, density=True)
 points = 0.5*(bins[:-1]+bins[1:])
-points = append(points,array([points[-1]]))
-points = append(array([points[0]]), points)
-vals = append(vals, zeros(1))
-vals = append(zeros(1),vals)
-are[0].scatter(log10(data[:,9]/data[:,8]), log10(finalMT), s=0.1)
-are[1].loglog(points, cumsum(vals)*100*(points[2]-points[0]), linewidth=2)
+are[0].hist2d(log10(re), log10(mt), s=0.1, norm=LogNorm)
+are[1].loglog(points, cumsum(vals*diff(bins))*100, linewidth=2)
 are[0].set_xlabel(r"$\log_{10}(e/e_{0})$", fontsize=24)
-are[0].set_ylabel(r"$\log_{10}(\tau_{GW, out})$", fontsize=24)
+are[0].set_ylabel(r"$\log_{10}(\tau_{GW, out}/\log_{10}(\tau_{GW, in})$", fontsize=24)
 are[1].set_xlabel(r"$\log_{10}(e/e_{0})$", fontsize=24)
 are[1].set_ylabel(r"Cumulative fraction [%]", fontsize=24)
-
+are[1].set_xlim([0.005, 21.])
+are[1].set_ylim([3.e-4, 99])
 
 # Effective spins
 vals, bins = histogram(data[:,-10], bins=100, density=True)
