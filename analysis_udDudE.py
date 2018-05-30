@@ -2,7 +2,7 @@ from physics import *
 from matplotlib.pylab import *
 ion()
 
-data = loadtxt("/home/joe/Documents/PhD_datafiles/eccentricity/cEudD/survE01.dat")
+data = loadtxt("../three_body_parabolic/outputNN/surv_Eud_Dud.dat")
 print shape(data)[0]
 data = data[data[:,10]>0]
 print shape(data)[0]
@@ -14,7 +14,7 @@ beta = betaFactor(m1, m2)
 MM = 4.e6*Msun
 
 minA = 1.e-2*au
-maxA = (1.)*au
+maxA = (1.e0)*au
 numS = shape(data)[0]
 
 
