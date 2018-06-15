@@ -8,7 +8,7 @@ rank   = comm.Get_rank()
 nprocs = comm.Get_size()
 a0_min = 0.01*au
 a0_max = 1.0*au
-nS = 2                         # Number of rescalings
+nS = 20                         # Number of rescalings
 
 Mmbh = 4.e6*Msun
 m1   = 30.*Msun
@@ -22,7 +22,7 @@ beta = betaFactor(m1, m2)
 # master proc load and share data with other procs
 if rank == 0:
     print "Proc 0 reading data file"
-    dataT = loadtxt("/home/joe/Documents/PhD_datafiles/UD_10rt_Dea.dat")     # Change data.dat for an adequate directory
+    dataT = loadtxt("../UD_10rt_DeaX.dat")     # Change data.dat for an adequate directory
     dataT = dataT[dataT[:,2]>0]
     nE = shape(dataT)[0]            # Number of binary encounters
 else:
