@@ -95,9 +95,9 @@ for ii in range(nn):
 initMT1, initMT2, initMT3 = initMT1/sTy, initMT2/sTy, initMT3/sTy
 finalMT1, finalMT2, finalMT3 = finalMT1/sTy, finalMT2/sTy, finalMT3/sTy
 
-fil1 = finalMT1[finalMT1<10**10.]
-fil2 = finalMT2[finalMT2<10**10.]
-fil3 = finalMT3[finalMT3<10**10.]
+fil1 = finalMT1<10**10.
+fil2 = ffinalMT2<10**10.
+fil3 = finalMT3<10**10.
 
 print "Calculating tidal radii"
 rt1 = MMm*initA1
@@ -162,18 +162,21 @@ fef, aef   = subplots(1,2)
 
 
 # Calculate eccentricity distribution
-ecc1 = 1. - data1[fil1][:,9]
-vals1, bins1 = histogram(1.- data1[:,9], bins=100, density=True)
+ecc1 = concatenate([data1[:,9], data1[:,9], data1[:,9]])
+ecc1 = 1. - ecc1[fil1]
+vals1, bins1 = histogram(ecc1, bins=100, density=True)
 points1 = 0.5*(bins1[:-1]+bins1[1:])
 cumDist1 = cumsum(vals1*diff(bins1))*100
 
-ecc2 = 1. - data2[fil2][:,9]
-vals2, bins2 = histogram(1.- data2[:,9], bins=100, density=True)
+ecc2 = concatenate([data2[:,9], data2[:,9], data2[:,9]])
+ecc2 = 1. - ecc2[fil2]
+vals2, bins2 = histogram(ecc2, bins=100, density=True)
 points2 = 0.5*(bins2[:-1]+bins2[1:])
 cumDist2 = cumsum(vals2*diff(bins2))*100
 
-ecc3 = 1. - data3[fil3][:,9]
-vals3, bins3 = histogram(1.- data3[:,9], bins=100, density=True)
+ecc3 = concatenate([data3[:,9], data3[:,9], data3[:,9]])
+ecc3 = 1. - ecc3[fil3]
+vals3, bins3 = histogram(ecc3, bins=100, density=True)
 points3 = 0.5*(bins3[:-1]+bins3[1:])
 cumDist3 = cumsum(vals3*diff(bins3))*100
 # Plot eccentricity distribution
