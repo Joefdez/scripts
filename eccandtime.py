@@ -4,15 +4,15 @@ from matplotlib.pylab import *
 from matplotlib.colors import *
 ion()
 
-rcParams['font.family'] = 'serif'
-rcParams['font.serif']  = 'dejavusans'
-rcParams['mathtext.fontset'] = 'dejavuserif'
-rcParams['mathtext.bf'] = 'dejavuserif'
+#rcParams['font.family'] = 'serif'
+#rcParams['font.serif']  = 'dejavusans'
+#rcParams['mathtext.fontset'] = 'dejavuserif'
+#rcParams['mathtext.bf'] = 'dejavuserif'
 
 
 
 nn = 3
-data1 = loadtxt("/home/joe/Documents/PhD_datafiles/eccentricity/LSmontecarlos/ud/EudDud_total.dat")
+data1 = loadtxt("/home/arijfern//Desktop/lsmc/ud_final.dat")
 print shape(data1)[0]
 data1 = data1[data1[:,-1]==1]
 data1 = data1[data1[:,10]>0]
@@ -28,10 +28,11 @@ ts1      = zeros(nn*numS1)
 ls1      = zeros(nn*numS1)
 l12      = zeros(nn*numS1) # Angular momentum squared
 
-data2 = loadtxt("/home/joe/Documents/PhD_datafiles/eccentricity/LSmontecarlos/plp1/pl_allD3.3_e095.dat")
+data2 = loadtxt("/home/arijfern/Desktop/lsmc/pln1_final.dat")
 print shape(data2)[0]
 data2 = data2[data2[:,-1]==1]
 data2 = data2[data2[:,10]>0]
+data2 = data2[data2[:,8]<0.951]
 numS2 = shape(data2)[0]
 initMT2 = zeros(nn*numS2)
 finalMT2 = zeros(nn*numS2)
@@ -44,10 +45,11 @@ ls2      = zeros(nn*numS2)
 l22      = zeros(nn*numS2) # Angular momentum squared
 
 
-data3 = loadtxt("/home/joe/Documents/PhD_datafiles/eccentricity/LSmontecarlos/pln05/pln05_partial.dat")
+data3 = loadtxt("/home/arijfern/Desktop/lsmc/pln05_final.dat")
 print shape(data3)[0]
 data3 = data3[data3[:,-1]==1]
 data3 = data3[data3[:,10]>0]
+data3 = data3[data3[:,8]<0.951]
 numS3 = shape(data3)[0]
 initMT3 = zeros(nn*numS3)
 finalMT3 = zeros(nn*numS3)
