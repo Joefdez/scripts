@@ -1,5 +1,5 @@
 from numpy import *
-from numpy.random import uniform
+from numpy.random import uniform, seed
 from matplotlib.pylab import *
 from scipy.integrate import quad
 
@@ -19,7 +19,7 @@ def quadArray(func, aa, bb):
 
 def uniformLog(aa, bb, nn):
     # Return a nn random numbers uniformly distributed in log10 space
-
+    seed()
     limA = log10(aa)
     limB = log10(bb)
 

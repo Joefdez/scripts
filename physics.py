@@ -48,3 +48,25 @@ def mergerTimecirc(aa0s, beta):
     # aa0s: array of initial semi-major axes
 
     return aa0**4./beta
+
+
+def deltaE_encounter(MM, mm1, mm2, rm):
+    # Calculate the change in energy of a mass upon a close encounter with another mass
+    # on a parabolic orbit (e=1)
+
+    # rm -> periastron distance
+    # MM -> MBH mass, mm1, mm2 -> binary member masses
+
+    ge = (85./12.) * pi
+    totM =  MM + mm1 + mm2
+    mf = sqrt(totM) * MM**2. * (mm1+mm2)**2.
+
+    delE = (GG**(7./2.)/cc**5.) * mf/(rm**(7./2.)) * ge
+
+
+    return delE
+
+def binary_energy(mm1, mm2, aa):
+    # Binding energy of a binary
+    # It is negativ (returned with positive sign though)
+    return GG*(mm1*mm2)/(2*aa)
