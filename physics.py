@@ -47,7 +47,7 @@ def mergerTimecirc(aa0s, beta):
     # Assumes equal mass binaries (i.e single value of beta factor)
     # aa0s: array of initial semi-major axes
 
-    return aa0**4./beta
+    return aa0s**4./beta
 
 
 def deltaE_encounter(MM, mm1, mm2, rm):
