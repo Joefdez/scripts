@@ -96,7 +96,7 @@ initMT1, initMT2, initMT3 = initMT1/sTy, initMT2/sTy, initMT3/sTy
 finalMT1, finalMT2, finalMT3 = finalMT1/sTy, finalMT2/sTy, finalMT3/sTy
 
 fil1 = finalMT1<10**10.
-fil2 = ffinalMT2<10**10.
+fil2 = finalMT2<10**10.
 fil3 = finalMT3<10**10.
 
 print "Calculating tidal radii"
@@ -187,9 +187,9 @@ ae[0].set_xscale("log")
 ae[1].loglog(points1, cumDist1)
 ae[1].loglog(points2, cumDist2)
 ae[1].loglog(points3, cumDist3)
-ae[1].step(points2, vals2, linewidth=2)
-ae[1].step(points2, vals2, linewidth=2)
-ae[1].loglog(points, cumDist, linewidth=2)
+#ae[1].step(points2, vals2, linewidth=2)
+#ae[1].step(points2, vals2, linewidth=2)
+#ae[1].loglog(points, cumDist, linewidth=2)
 ae[0].set_xlabel(r"$1-e$", fontsize=24)
 ae[0].set_ylabel(r"$p(1-e)$", fontsize=24)
 ae[1].set_xlabel(r"$1-e$", fontsize=24)
