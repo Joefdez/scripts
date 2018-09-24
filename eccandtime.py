@@ -17,9 +17,9 @@ MM = 4.e6*Msun
 
 MMm = (MM/(m1+m2))**(1./3.)
 
-const = 3./85. * cc**5./(GG**3. m1*m2*(m1+m2))
+const = 3./85. * cc**5./(GG**3. *m1*m2*(m1+m2))
 
-nn = 3
+nn = 1
 data1 = loadtxt("/home/arijfern//Desktop/lsmc/ud_final.dat")
 print shape(data1)[0]
 data1 = data1[data1[:,-1]==1]
@@ -90,9 +90,9 @@ maxA2 = (3.e2)*au
 print "Generating initial separations and initial and final merger times."
 for ii in range(nn):
 
-    initA1[ii*numS1:(ii+1)*numS1]     = uniformLog(minA, maxA1, numS1)
-    initA2[ii*numS2:(ii+1)*numS2]     = uniformLog(minA, maxA2, numS2)
-    initA3[ii*numS3:(ii+1)*numS3]     = uniformLog(minA, maxA1, numS3)
+    initA1[ii*numS1:(ii+1)*numS1]     = uniformLog(minA1, maxA1, numS1)
+    initA2[ii*numS2:(ii+1)*numS2]     = uniformLog(minA2, maxA2, numS2)
+    initA3[ii*numS3:(ii+1)*numS3]     = uniformLog(minA3, maxA1, numS3)
     finalA1[ii*numS1:(ii+1)*numS1]    = data1[:,0]*data1[:,10]*initA1[ii*numS1:(ii+1)*numS1]
     finalA2[ii*numS2:(ii+1)*numS2]    = data2[:,0]*data2[:,10]*initA2[ii*numS2:(ii+1)*numS2]
     finalA3[ii*numS3:(ii+1)*numS3]    = data3[:,0]*data3[:,10]*initA3[ii*numS3:(ii+1)*numS3]
@@ -176,19 +176,19 @@ fef, aef   = subplots(1,2)
 
 
 # Calculate eccentricity distribution
-ecc1 = concatenate([data1[:,9], data1[:,9], data1[:,9]])
+#ecc1 = concatenate([data1[:,9], data1[:,9], data1[:,9]])
 ecc1 = 1. - ecc1[fil1]
 vals1, bins1 = histogram(ecc1, bins=100, density=True)
 points1 = 0.5*(bins1[:-1]+bins1[1:])
 cumDist1 = cumsum(vals1*diff(bins1))*100
 
-ecc2 = concatenate([data2[:,9], data2[:,9], data2[:,9]])
+#ecc2 = concatenate([data2[:,9], data2[:,9], data2[:,9]])
 ecc2 = 1. - ecc2[fil2]
 vals2, bins2 = histogram(ecc2, bins=100, density=True)
 points2 = 0.5*(bins2[:-1]+bins2[1:])
 cumDist2 = cumsum(vals2*diff(bins2))*100
 
-ecc3 = concatenate([data3[:,9], data3[:,9], data3[:,9]])
+#ecc3 = concatenate([data3[:,9], data3[:,9], data3[:,9]])
 ecc3 = 1. - ecc3[fil3]
 vals3, bins3 = histogram(ecc3, bins=100, density=True)
 points3 = 0.5*(bins3[:-1]+bins3[1:])
