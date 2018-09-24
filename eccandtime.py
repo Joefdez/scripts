@@ -83,8 +83,8 @@ MM = 4.e6*Msun
 MMm = (MM/(m1+m2))**(1./3.)
 
 minA = 1.5*au
-maxA1 = (3.e2)*au
-maxA2 = (3.e2)*au
+maxA1 = 14.#(3.e2)*au
+maxA2 = 14.#(3.e2)*au
 
 
 print "Generating initial separations and initial and final merger times."
