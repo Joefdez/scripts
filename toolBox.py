@@ -26,3 +26,9 @@ def uniformLog(aa, bb, nn):
     nums = uniform(limA, limB, nn)
 
     return 10.**nums
+
+
+#def uniformLogVarlim(aa, bb):
+#    seed()
+#    limA = log10(aa)
+#    limB = log10(bb)

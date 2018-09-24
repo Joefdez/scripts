@@ -9,7 +9,15 @@ ion()
 #rcParams['mathtext.fontset'] = 'dejavuserif'
 #rcParams['mathtext.bf'] = 'dejavuserif'
 
+m1 = 30.*Msun
+m2 = 30.*Msun
+betaF = betaFactor(m1, m2)
 
+MM = 4.e6*Msun
+
+MMm = (MM/(m1+m2))**(1./3.)
+
+const = 3./85. * cc**5./(GG**3. m1*m2*(m1+m2))
 
 nn = 3
 data1 = loadtxt("/home/arijfern//Desktop/lsmc/ud_final.dat")
@@ -27,6 +35,8 @@ rps1     = zeros(nn*numS1)
 ts1      = zeros(nn*numS1)
 ls1      = zeros(nn*numS1)
 l12      = zeros(nn*numS1) # Angular momentum squared
+minA1 = minSMA(data1[:,8], sTy*10.**10, betaF)
+
 
 data2 = loadtxt("/home/arijfern/Desktop/lsmc/pln1_final.dat")
 print shape(data2)[0]
@@ -43,6 +53,7 @@ rps2     = zeros(nn*numS2)
 ts2      = zeros(nn*numS2)
 ls2      = zeros(nn*numS2)
 l22      = zeros(nn*numS2) # Angular momentum squared
+minA2 = minSMA(data2[:,8], sTy*10.**10, betaF)
 
 
 data3 = loadtxt("/home/arijfern/Desktop/lsmc/pln05_final.dat")
@@ -60,11 +71,12 @@ rps3     = zeros(nn*numS3)
 ts3      = zeros(nn*numS3)
 ls3      = zeros(nn*numS3)
 l32      = zeros(nn*numS3) # Angular momentum squared
+minA3 = minSMA(data3[:,8], sTy*10.**10, betaF)
 
 
 m1 = 30.*Msun
 m2 = 30.*Msun
-beta = betaFactor(m1, m2)
+betaF = betaFactor(m1, m2)
 
 MM = 4.e6*Msun
 
@@ -85,15 +97,17 @@ for ii in range(nn):
     finalA2[ii*numS2:(ii+1)*numS2]    = data2[:,0]*data2[:,10]*initA2[ii*numS2:(ii+1)*numS2]
     finalA3[ii*numS3:(ii+1)*numS3]    = data3[:,0]*data3[:,10]*initA3[ii*numS3:(ii+1)*numS3]
 
-    initMT1[ii*numS1:(ii+1)*numS1]  = mergerTimeecc(initA1[ii*numS1:(ii+1)*numS1], data1[:,8], beta)
-    initMT2[ii*numS2:(ii+1)*numS2]  = mergerTimeecc(initA2[ii*numS2:(ii+1)*numS2], data2[:,8], beta)
-    initMT3[ii*numS3:(ii+1)*numS3]  = mergerTimeecc(initA3[ii*numS3:(ii+1)*numS3], data3[:,8], beta)
-    finalMT1[ii*numS1:(ii+1)*numS1] = mergerTimeecc(finalA1[ii*numS1:(ii+1)*numS1], data1[:,9], beta)
-    finalMT2[ii*numS2:(ii+1)*numS2] = mergerTimeecc(finalA2[ii*numS2:(ii+1)*numS2], data2[:,9], beta)
-    finalMT3[ii*numS3:(ii+1)*numS3] = mergerTimeecc(finalA3[ii*numS3:(ii+1)*numS3], data3[:,9], beta)
+    initMT1[ii*numS1:(ii+1)*numS1]  = mergerTimeecc(initA1[ii*numS1:(ii+1)*numS1], data1[:,8], betaF)
+    initMT2[ii*numS2:(ii+1)*numS2]  = mergerTimeecc(initA2[ii*numS2:(ii+1)*numS2], data2[:,8], betaF)
+    initMT3[ii*numS3:(ii+1)*numS3]  = mergerTimeecc(initA3[ii*numS3:(ii+1)*numS3], data3[:,8], betaF)
+    finalMT1[ii*numS1:(ii+1)*numS1] = mergerTimeecc(finalA1[ii*numS1:(ii+1)*numS1], data1[:,9], betaF)
+    finalMT2[ii*numS2:(ii+1)*numS2] = mergerTimeecc(finalA2[ii*numS2:(ii+1)*numS2], data2[:,9], betaF)
+    finalMT3[ii*numS3:(ii+1)*numS3] = mergerTimeecc(finalA3[ii*numS3:(ii+1)*numS3], data3[:,9], betaF)
 
 initMT1, initMT2, initMT3 = initMT1/sTy, initMT2/sTy, initMT3/sTy
 finalMT1, finalMT2, finalMT3 = finalMT1/sTy, finalMT2/sTy, finalMT3/sTy
+
+
 
 fil1 = finalMT1<10**10.
 fil2 = finalMT2<10**10.
@@ -118,7 +132,7 @@ for ii in range(nn):
 
 
 #initMT  = initMT/sTy
-#finalMT = mergerTimeecc(data[:,0]*data[:,10]*initA, data[:,9], beta)
+#finalMT = mergerTimeecc(data[:,0]*data[:,10]*initA, data[:,9], betaF)
 #finalMT = finalMT/sTy
 
 
@@ -415,6 +429,8 @@ att2[1].grid()
 """
 
 """
+
+"""
 # Change in orbital energy
 ratE1 = zeros(nn*numS1)
 ratE2 = zeros(nn*numS2)
@@ -452,8 +468,8 @@ adelE0[0].step(points3, vals3, linewidth=2, label=r'$p(e_{0}) \propto e_{0}^{-1/
 adelE0[1].plot(points1, cumDist1)
 adelE0[1].plot(points2, cumDist2)
 adelE0[1].plot(points3, cumDist3)
-
-
+"""
+"""
 # Energy radiated due to gravitational waves
 # deltaE_encounter(MM, m1, m2, rm)
 binEn01 = binary_energy(m1, m2, initA1[fil1])
@@ -555,7 +571,7 @@ for ii in range(nn):
 ee_t1 = sqrt(1. -((binEn1-binEn01)*l12)/(GG**2. * MM**2. * (m1+m2)) )
 ee_t2 = sqrt(1. -((binEn2-binEn02)*l22)/(GG**2. * MM**2. * (m1+m2)) )
 ee_t3 = sqrt(1. -((binEn3-binEn03)*l32)/(GG**2. * MM**2. * (m1+m2)) )
-
+!"""
 
 print "Dist 1., percentage of mergers", shape(finalMT1[log10(finalMT1)<10]
                                             )[0]/float(shape(finalMT1)[0]) * 100

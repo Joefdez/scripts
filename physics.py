@@ -49,6 +49,17 @@ def mergerTimecirc(aa0s, beta):
 
     return aa0s**4./beta
 
+def minSMA(ees, tt, beta):
+    # semi-major axis at which given an eccentricity ee the binary with beta factor beta will merge in a time tt
+    # Inputs are asrrays, at least ee.
+
+    numS = shape(ees)
+    ints = quadArray(mergerTimeInt, zeros(numS), ees)
+
+    prefactor = ees**(12./19.)/(1.-ees**2.) * (1. + (121./304.)*(ees**2.))**(870./2299.)
+
+    return prefactor*(19./12. * tt*beta/ints)**(1./4.)
+
 
 def deltaE_encounter(MM, mm1, mm2, rm):
     # Calculate the change in energy of a mass upon a close encounter with another mass
