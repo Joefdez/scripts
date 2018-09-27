@@ -83,8 +83,8 @@ MM = 4.e6*Msun
 MMm = (MM/(m1+m2))**(1./3.)
 
 minA = 1.5*au
-maxA1 = 14.#(3.e2)*au
-maxA2 = 14.#(3.e2)*au
+maxA1 = 14.*au#(3.e2)*au
+maxA2 = 14.*au#(3.e2)*au
 
 
 print "Generating initial separations and initial and final merger times."
@@ -177,19 +177,19 @@ fef, aef   = subplots(1,2)
 
 # Calculate eccentricity distribution
 #ecc1 = concatenate([data1[:,9], data1[:,9], data1[:,9]])
-ecc1 = 1. - ecc1[fil1]
+ecc1 = 1. - data1[fil1][:,9]
 vals1, bins1 = histogram(ecc1, bins=100, density=True)
 points1 = 0.5*(bins1[:-1]+bins1[1:])
 cumDist1 = cumsum(vals1*diff(bins1))*100
 
 #ecc2 = concatenate([data2[:,9], data2[:,9], data2[:,9]])
-ecc2 = 1. - ecc2[fil2]
+ecc2 = 1. - data2[fil2][:,9]
 vals2, bins2 = histogram(ecc2, bins=100, density=True)
 points2 = 0.5*(bins2[:-1]+bins2[1:])
 cumDist2 = cumsum(vals2*diff(bins2))*100
 
 #ecc3 = concatenate([data3[:,9], data3[:,9], data3[:,9]])
-ecc3 = 1. - ecc3[fil3]
+ecc3 = 1. - data3[fil3][:,9]
 vals3, bins3 = histogram(ecc3, bins=100, density=True)
 points3 = 0.5*(bins3[:-1]+bins3[1:])
 cumDist3 = cumsum(vals3*diff(bins3))*100
