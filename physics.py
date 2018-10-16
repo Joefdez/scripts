@@ -1,5 +1,6 @@
 from toolBox import *
 from constants import *
+from scipy.special import jv
 
 def cc0Factor(aa0, ee0):
     # Integration constant for Peter's equations
@@ -81,3 +82,53 @@ def binary_energy(mm1, mm2, aa):
     # Binding energy of a binary
     # It is negativ (returned with positive sign though)
     return GG*(mm1*mm2)/(2*aa)
+
+
+def orbFreqEcc(ee, ff0, ee0):
+    # Compute orbital frequency as a function of eccentricity, given the initial orbital binary eccentricity and frequency arXvi:1805.06194 eq 5.
+
+    return ff0*((1.-ee0**2.)/(1.-ee**2.) * (ee/ee0)**(12./19.
+            ) * (1.+121./304. * ee**2.)/(1.+121./304. * ee0**2.
+            )**(870./229))**(-3./2.)
+
+def peakFreqEcc(ee, ff0, ee0):
+    # Compute the peak gravitational wave frequency given the initial eccenricity and initial orbital frequency
+    orbF = orbFreqEcc(ee, ff0, ee0)
+
+    return 2.*orbF*(1-ee)**(-3./2.)
+
+def chirpMass(m1, m2):
+
+    return (m1*m2)**(3./5.)/(m1+m2)**(1./5.)
+
+def eccF(ee):
+
+    return (1. + (73./24.) * ee**2. + (37./96.) * ee**4.)/((1.-ee**2.)**(7./2.))
+
+def harmG(nn, ee):
+
+    ne = nn*ee
+    cc1 = jv(nn-2, ne) - 2.*ee*jv(nn-1,ne) + 2./nn * jv(nn, ne) + 2.*ee*jv(nn+1, ne) - jv(nn+2, ne)
+    cc2 = (1.-ee**2.) * (jv(nn-2,ne) - 2.*jv(nn, ne) + jv(nn+2, ne))**2.
+    cc3 = 4./(3.*nn**2.) * jv(nn,ne)**2.
+
+    return (nn**4.)/32. * (cc1**2. + cc2 + cc3)
+
+
+def dEdf(cMass, ff, zz, ee, nn):
+
+    gg = harmG(nn, ee)
+    enhancement = eccF(ee)
+    preFac =  (GG*cMass)**(5./3.)/(3.*pi**(1./3.)*(1.+ zz)**(1./3.)*ff**(1./3.))
+
+    return preFac*(2./nn)**(2./3.) * gg/enhancement
+
+
+def eccStrainNN(cMass, ff, ee, zz, nn, DD):
+
+    return 1./(pi*DD) * sqrt(2.*GG/cc**3. * dEdf(cMass, ff, zz, ee, nn))
+
+
+def circStrain(cMass, ff, DD):
+
+    return 1./DD * 2.*(4.*pi)**(1./3.)*GG**(5./3.)/cc**4. * ff**(2./3.) * cMass**(5./3.)
