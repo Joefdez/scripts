@@ -7,8 +7,8 @@ comm   = MPI.COMM_WORLD
 rank   = comm.Get_rank()
 nprocs = comm.Get_size()
 a0_min = 0.01*au
-a0_max = 1.0*au
-nS = 20                         # Number of rescalings
+a0_max = 70.*au
+nS = 5                         # Number of rescalings
 
 Mmbh = 4.e6*Msun
 m1   = 30.*Msun
@@ -18,7 +18,7 @@ Mm  = (Mmbh/mm)**(1./3.)
 rK  = 1.*pc
 orbT = 2.*pi/sqrt(GG*Mmbh) * rK**(3./2.)                    # Full elliptical orbit time
 beta = betaFactor(m1, m2)
-
+Rs   = 2.*GG*Mmbh/(cc**2)
 # master proc load and share data with other procs
 if rank == 0:
     print "Proc 0 reading data file"
@@ -79,13 +79,13 @@ else:
 
 # Pre-calcutiations
 print "Proc. "+ str(rank) + " calculating integrl terms of merger times"
-mtInt= quadArray(mergeTimeInt, zeros(nEP), dataP[:,1])         # Integral part of merger time, only depends on eccentricity. This line reduces the number of integrals to be calculated
+mtInt= quadArray(mergerTimeInt, zeros(nEP), dataP[:,1])         # Integral part of merger time, only depends on eccentricity. This line reduces the number of integrals to be calculated
 ff0  = arccos(dataP[:,0]/5. - 1)                               # ff0 -> doesn't depend on scaled values
 tf0  = tan(ff0/2.)                               # tan(ff0)
 tt0  = (sqrt(2.)/3.)*tf0*(3. + tf0**2.)          # Scaled initial time. Also time at which the binary reaches 10 Rt after the encounter
 nB    = nS*nEP                                   # Number of trajectories this process will generate
 dataP[:,2] = dataP[:,0]*dataP[:,2]                  # Post-encounter semi-major axes in units of initial semi-major axis
-results = zeros([nB, 6])
+results = zeros([nB, 8])
 
 print "Proc. "+ str(rank) + " sampling binary separations"
 for ii in range(nS):
@@ -115,11 +115,15 @@ for ii in range(nS):
     dists = 2*Rp/(1.+cos(mf))
 
     results[ii*nEP:(ii+1)*nEP,0] = dataP[:,0]     # D
-    results[ii*nEP:(ii+1)*nEP,1] = aa0s           # Pre-encounter sma
-    results[ii*nEP:(ii+1)*nEP,2] = aa             # Post-encounter SMA
-    results[ii*nEP:(ii+1)*nEP,3] = dataP[:,1]     # Eccentricity
-    results[ii*nEP:(ii+1)*nEP,4] = mt             # Merger time
-    results[ii*nEP:(ii+1)*nEP,5] = dists[:]       # Distance of merger
+    results[ii*nEP:(ii+1)*nEP,1] = Rp
+    results[ii*nEP:(ii+1)*nEP,2] = aa0s           # Pre-encounter sma
+    results[ii*nEP:(ii+1)*nEP,3] = aa             # Post-encounter SMA
+    results[ii*nEP:(ii+1)*nEP,4] = dataP[:,1]     # Eccentricity
+    results[ii*nEP:(ii+1)*nEP,5] = aa0s**4/(sTy*4.*beta)
+    results[ii*nEP:(ii+1)*nEP,6] = mt/sTy             # Merger time
+    results[ii*nEP:(ii+1)*nEP,7] = dists[:]/Rs       # Distance of merger
 
-fname = "outputDist/results_" + str(rank) + ".dat"
-savetxt(fname, results)
+fname1 = "outputTest/results_001_70" + str(rank) + ".dat"
+fname2 = "outputTest/results_001_70_mt10" + str(rank) + ".dat"
+savetxt(fname1, results)
+savetxt(fname2, results[log10(results[:,6]) <= 10])
