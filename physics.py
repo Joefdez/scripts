@@ -14,7 +14,6 @@ def betaFactor(m1, m2):
 
     return (64./5.)*GG**3. * m1*m2*(m1+m2)/(cc**5)
 
-    return
 
 def mergerTimeInt(ee):
     # Integral of merger time formula of a compact binary object due to GW radiation according to Peters equations:
@@ -89,7 +88,7 @@ def orbFreqEcc(ee, ff0, ee0):
 
     return ff0*((1.-ee0**2.)/(1.-ee**2.) * (ee/ee0)**(12./19.
             ) * (1.+121./304. * ee**2.)/(1.+121./304. * ee0**2.
-            )**(870./229))**(-3./2.)
+            )**(870./2229))**(-3./2.)
 
 def peakFreqEcc(ee, ff0, ee0):
     # Compute the peak gravitational wave frequency given the initial eccenricity and initial orbital frequency
